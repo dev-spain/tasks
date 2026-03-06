@@ -93,10 +93,24 @@ class TasksService
         $filter->dateFrom = $start->format('Y-m-d H:i:s');
         $filter->dateTo = $end->format('Y-m-d H:i:s');
 
+        $totalPageCount = 1;
         $request->filter = $filter;
         $request->limit = 100;
+        $request->page = $totalPageCount;
 
-        return $this->client->tasks->list($request)->tasks;
+        $tasks = [];
+
+        do {
+            $response = $this->client->tasks->list($request);
+
+            if (!empty($response->tasks)) {
+                $tasks = array_merge($tasks, $response->tasks);
+            }
+
+            $totalPageCount = max(1, (int) ($response->pagination->totalPageCount ?? 1));
+        } while ($request->page++ < $totalPageCount);
+
+        return $tasks;
     }
 
     private function getCustomer(Task $task)
