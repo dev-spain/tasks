@@ -26,7 +26,10 @@
             "civicrm/composer-compile-plugin": true,
             "symfony/runtime": true
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.30"
+        }
     },
     "autoload": {
         "psr-4": {
