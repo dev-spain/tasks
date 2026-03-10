@@ -21,25 +21,25 @@ class UploadTasksCommand extends Command
      */
     private $tasksService;
 
-    private $projectDir;
+    private string $projectDir;
 
-    public function __construct(string $name = null, ExcelService $excelService, TasksService $tasksService, $projectDir)
+    public function __construct(ExcelService $excelService, TasksService $tasksService, string $projectDir)
     {
-        parent::__construct($name);
+        parent::__construct();
 
         $this->excelService = $excelService;
         $this->tasksService = $tasksService;
         $this->projectDir = $projectDir;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
         $this->addArgument('day', InputArgument::OPTIONAL, 'Upload for day number');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $end = new \DateTime();
 
@@ -52,7 +52,7 @@ class UploadTasksCommand extends Command
         $date = $date->format('d');
         $this->excelService->writeXLSX($this->projectDir . '/public/tasks-' . $date . '.xlsx', $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
 }
